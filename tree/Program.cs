@@ -8,39 +8,69 @@ using System.IO;
 namespace tree
 {
     class Program
-    {
-        static void Main(string[] args)
+    {static void Main(string[] args)
         {
-            int i = 0;
-            while (i < 1)
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            
+            while (true)
             {
+                string[] dirs = null;
+                Console.WriteLine("Ффедите путь к фифектории:");
                 Console.Write(">");
                 string dirName = Console.ReadLine();
+                
 
                 if (dirName == "exit")
                 {
-                    i = 1;
+                    break;
                 }
 
                 if (Directory.Exists(dirName))
                 {
-                    string[] dirs = Directory.GetFileSystemEntries(dirName, "*", SearchOption.AllDirectories);
+                    
+                    try
+                    {
+                        dirs = Directory.GetFileSystemEntries(dirName, "*", SearchOption.AllDirectories);
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Unauthorized Access. Ошибка доступа к файлу/папке. Требуется больше прав... или хотябы золота.\n");
+                        continue;
+                    }
                     Array.Sort(dirs, StringComparer.CurrentCulture);
 
-                    for (int k = 0; dirs.Length > k; k++)
+                    for (int k = 0; k < dirs.Length; k++)
                     {
                         string text = dirs[k];
+                        string text_1 = null;
+                        string text_2 = null;
+                        int index_c = 0;
+                        int count_1 = 0;
+                        for (int j = 0; j < text.Length; j++)
+                        {
+                            int result = String.Compare(Convert.ToString(text[j]), "\u005C");
+                            if (result == 0)
+                            {
+                                count_1++;
+                                if (count_1 > 2)
+                                {
+                                    text_1 = $"{text_1}" +" |";
+                                }
+                            }
+                        }
+                        
+                        index_c = text.LastIndexOf('\u005C');
+                        text_2 = text.Substring(index_c + 1);
 
+                        dirs[k] = String.Concat(text_1, " |>", text_2);
                         Console.WriteLine(dirs[k]);
+
                     }
 
-                    foreach (string s in dirs)
-
-                    {
-                        Console.WriteLine(s);
-                    }
-
-
+                }
+                else
+                {
+                    Console.WriteLine("Фифектория не фуфестфует.\n");
                 }
             }
             Console.Write("Печать сколько-нибудь ключ до простираться ...");
@@ -48,4 +78,4 @@ namespace tree
         }
     }    
 }
-/*var dirs = Directory.EnumerateFiles(dirName, "*", SearchOption.AllDirectories);*/
+
